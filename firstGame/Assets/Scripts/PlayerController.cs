@@ -24,10 +24,20 @@ public class PlayerController : MonoBehaviour {
         horizontalMovementSpeed = Input.GetAxisRaw("Horizontal") * movementSpeed;
 
         anim.SetFloat("speed", Mathf.Abs(horizontalMovementSpeed));
+
+        if (Input.GetButtonDown("Jump")) {
+            isJumping = true;
+            anim.SetBool("isJumping", true);
+        }
 	}
 
+    public void OnLanding() {
+        isJumping = false;
+        anim.SetBool("isJumping", false);
+    }
+
     void FixedUpdate() {
-        controller.Move(horizontalMovementSpeed * Time.fixedDeltaTime, false, false);
+        controller.Move(horizontalMovementSpeed * Time.fixedDeltaTime, false, isJumping);
         isJumping = false;
     }
 }
