@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -11,6 +10,7 @@ public class PlayerController : MonoBehaviour {
     public float movementSpeed;
     int score;
 
+    public Text scoreText;
     float horizontalMovementSpeed;
     bool isJumping = false;
     bool isHurt = false;
@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        scoreText.text = score.ToString();
         horizontalMovementSpeed = Input.GetAxisRaw("Horizontal") * movementSpeed;
 
         anim.SetFloat("speed", Mathf.Abs(horizontalMovementSpeed));
@@ -39,7 +40,14 @@ public class PlayerController : MonoBehaviour {
         anim.SetBool("isJumping", false);
     }
 
-    void OnTriggerEnter2D(Collider2D col) {
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Gem")
+        {
+            score++;
+            Destroy(col.gameObject);
+        }
+
         if (col.gameObject.tag == "Enemy") {
             if (isJumping)
             {
