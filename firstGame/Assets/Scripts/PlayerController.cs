@@ -6,8 +6,10 @@ public class PlayerController : MonoBehaviour {
 
     public CharacterController2D controller;
     public Animator anim;
-
+    public BoxCollider2D boxCol;
+    public CircleCollider2D circleColider;
     public float movementSpeed;
+    int score;
 
     float horizontalMovementSpeed;
     bool isJumping = false;
@@ -17,6 +19,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         anim = GetComponent<Animator>();
         controller = GetComponent<CharacterController2D>();
+        score = 0;
 	}
 	
 	// Update is called once per frame
@@ -36,8 +39,22 @@ public class PlayerController : MonoBehaviour {
         anim.SetBool("isJumping", false);
     }
 
+    void OnTriggerEnter2D(Collider2D col) {
+        if (col.gameObject.tag == "Enemy") {
+            if (isJumping)
+            {
+                Destroy(col.gameObject);
+                score++;
+            }
+            else {
+                anim.SetBool("isHurt", true);
+                boxCol.enabled = false;
+                circleColider.enabled = false;
+            }
+        }
+    }
+
     void FixedUpdate() {
         controller.Move(horizontalMovementSpeed * Time.fixedDeltaTime, false, isJumping);
-        isJumping = false;
     }
 }
